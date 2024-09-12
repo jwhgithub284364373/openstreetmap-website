@@ -2,11 +2,16 @@ name: Docker
 on:
   - push
   - pull_request
+env:
+  ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
+  ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
+  ALIYUN_REGISTRY_USER: "${{ secrets.ALIYUN_REGISTRY_USER }}"
+  ALIYUN_REGISTRY_PASSWORD: "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}"
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  build:
     name: Docker
     runs-on: ubuntu-22.04
     steps:
@@ -17,6 +22,7 @@ jobs:
         cp config/example.storage.yml config/storage.yml
         cp config/docker.database.yml config/database.yml
         touch config/settings.local.yml
+        
     - name: Build Docker Image
       run: |
         docker compose build
@@ -39,3 +45,12 @@ jobs:
       run: |
         docker compose run --rm web bundle exec rails db:test:prepare
         docker compose run --rm web bundle exec rails test:all
+    - name: Build and push image Aliyun
+      run: |
+        docker version
+        # 登录阿里云镜像仓库
+        docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+        # 推送镜像到镜像仓库
+        new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/oepnstreetmap-website"
+        docker push $new_image
+        echo "docker push $new_image"
