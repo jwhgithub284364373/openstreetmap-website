@@ -23,7 +23,6 @@ jobs:
     - name: Build Docker Image
       run: |
         docker compose build
-        tags
     - name: Build and push image Aliyun
       run: |
         docker version
