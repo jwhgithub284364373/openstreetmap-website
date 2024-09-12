@@ -22,7 +22,7 @@ jobs:
         
     - name: Build Docker Image
       run: |
-        docker compose build tar oepnstreetmap-website
+        docker compose build
     - name: Build and push image Aliyun
       run: |
         docker version
