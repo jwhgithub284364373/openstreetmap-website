@@ -23,12 +23,13 @@ jobs:
     - name: Build Docker Image
       run: |
         docker compose build
+        tags
     - name: Build and push image Aliyun
       run: |
         docker version
         # 登录阿里云镜像仓库
         docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
         # 推送镜像到镜像仓库
-        new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/oepnstreetmap-website"
+        new_image="openstreetmap-website"
         docker push $new_image
         echo "docker push $new_image"
