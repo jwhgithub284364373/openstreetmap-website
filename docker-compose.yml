@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-    image: oepnstreetmap-website
+    image: openstreetmap-website
     environment:
       PIDFILE: /tmp/pids/server.pid
     volumes:
